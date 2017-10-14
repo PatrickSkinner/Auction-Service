@@ -12,7 +12,7 @@ receiver(Clients, Auctions) ->
 			io:format("Client Added~n"),
 			%io:format("~w~n", [lists:flatlength(NewClients)]),
 			
-			broadcastClient([Id, Interests], Auctions),
+			broadcastClient({Id, Interests}, Auctions),
 			receiver(NewClients, Auctions);
 			
 		{client_remove, Id, Interests} ->
@@ -37,6 +37,7 @@ broadcastClient( Client, []) ->
 	ok;
 broadcastClient( Client, Auctions ) ->
 	[Auction |Tail] = Auctions,
-	io:format("Iteration of Auctions ~w~n", [element(1, Auction)]),
+	%io:format("Iteration of Auctions ~w~n", [element(1, Auction)]),
+	
 	element(1, Auction) ! {client_add, Client},
 	broadcastClient( Client, Tail).
