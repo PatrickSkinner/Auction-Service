@@ -1,13 +1,14 @@
 -module(client).
--export([client/0]).
+-export([client/0, receiver/1]).
 
 client()->
 	service ! {client_add, self(), [1,3]},
-	service ! {client_remove, 5, [1,3]}.
-	%MR = spawn(?MODULE, receiver, [[],[]] ).
+	%service ! {client_remove, self(), [1,3]},
+	MR = spawn(?MODULE, receiver, [[]]).
 	
-receiver(Clients, Auctions) ->
+receiver(Auctions) ->
 	receive
-		{_, Msg}->
-			io:format("Client Received Message")
+		{subscribe_auction, Msg} ->
+			io:format("Client Subscribed To Auction"),
+			receiver(Auctions)
 	end.
