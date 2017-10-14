@@ -9,10 +9,12 @@ receiver(Clients, Auctions)->
 	receive
 		{client_add, Msg} ->
 			NewClients = [{Msg} | Clients],
+			io:format("Client Added"),
 			receiver(NewClients, Auctions);
 			
 		{client_remove, Msg} ->
 			NewClients = lists:keydelete(Msg, 1, Clients),
+			io:format("Client Removed"),
 			receiver(NewClients, Auctions);
 			
 		{auction_add, Msg} ->
