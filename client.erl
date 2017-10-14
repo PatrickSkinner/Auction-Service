@@ -2,8 +2,8 @@
 -export([client/0]).
 
 client()->
-	service ! client_add.
-	% MR = spawn(?MODULE, receiver, [[],[]]).
+	service ! {client_add, self(), []},
+	MR = spawn(?MODULE, receiver, [[],[]]).
 	
 receiver(Clients, Auctions)->
 	receive
