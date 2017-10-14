@@ -9,7 +9,9 @@ client()->
 	
 receiver(Auctions) ->
 	receive
-		{subscribe_auction, Msg} ->
+		{subscribe_auction, Auction} ->
 			io:format("Subscribed to new auction~n"),
-			receiver(Auctions)
+			
+			NewAuctions = [Auction | Auctions],
+			receiver(NewAuctions)
 	end.

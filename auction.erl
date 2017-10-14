@@ -13,8 +13,16 @@ receiver(Clients)->
 			
 			NewClients = [Client | Clients],
 			broadcast(Client, self()),
-			receiver(NewClients)
+			receiver(NewClients);
+		
+		{place_bid, Client, Amount}->
+			receiver(Clients)
+			
+	after 30*1000 ->
+		io:format("Auction Ended.~n")
+			
 	end.
 	
 broadcast(Client, MR)->
-	element(1, Client) ! {subscribe_auction, MR}.
+	Auction = {MR},
+	element(1, Client) ! {subscribe_auction, Auction}.
