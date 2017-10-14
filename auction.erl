@@ -2,11 +2,13 @@
 -export([auction/0, receiver/1]).
 
 auction()->
-	service ! {auction_add, self(), []},
-	MR = spawn(?MODULE, receiver, [[]]).
+	MR = spawn(?MODULE, receiver, [[]]),
+	io:format("Auction PID: ~w~n", [MR]),
+	service ! {auction_add, MR, []}.
 	
-receiver(Clients)->
+receiver(Client)->
 	receive
-		{_, Msg}->
-			io:format("Auction Received Message")
+		{client_add, Msg}->
+			io:format("Client Subscribed To Auction~n"),
+			receiver(Client)
 	end.
