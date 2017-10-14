@@ -14,4 +14,12 @@ receiver(Auctions) ->
 			
 			NewAuctions = [Auction | Auctions],
 			receiver(NewAuctions)
+	after 10*1000 ->
+		Index = rand:uniform( length(Auctions) ),
+		%io:format("Bidding on Auction No: ~w~n", [Index]),
+		Auction = lists:nth(Index, Auctions),
+		
+		element(1, Auction) ! {place_bid, rand:uniform( 25 )},
+		receiver(Auctions)
+		
 	end.
