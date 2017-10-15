@@ -27,7 +27,7 @@ receiver(Clients, Auctions) ->
 			
 			receiver(Clients, NewAuctions);
 			
-		{auction_remove, Id, Interests} ->
+		{auction_remove, Id} ->
 			NewAuctions = lists:keydelete(Id, 1, Auctions),
 			receiver(Clients, NewAuctions)
 			
