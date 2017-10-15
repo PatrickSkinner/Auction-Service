@@ -25,6 +25,7 @@ receiver(Clients, Auctions) ->
 			NewAuctions = [{Id, Interests} | Auctions],
 			io:format("Auction Added~n"),
 			
+			timer:send_after(30*1000, Id, {end_auction}),
 			receiver(Clients, NewAuctions);
 			
 		{auction_remove, Id} ->
@@ -34,6 +35,7 @@ receiver(Clients, Auctions) ->
 	end.
 	
 broadcastClient( Client, []) ->
+	io:format("end"),
 	ok;
 broadcastClient( Client, Auctions ) ->
 	[Auction |Tail] = Auctions,

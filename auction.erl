@@ -26,13 +26,17 @@ receiver(Clients, Bid, Leader)->
 			end,
 			io:format("Amount bid: ~w~n", [Amount]),
 			io:format("Highest Bid: ~w~n", [NewBid]),
-			receiver(Clients, NewBid, NewLeader)
+			receiver(Clients, NewBid, NewLeader);
 			
-	after 30*1000 ->
-		io:format("Auction Ended.~n")
+		{end_auction}->
+			io:format("Auction Ended. Leader: ~w. Bid: ~w~n", [Leader, Bid]),
 			
+			exit(normal)
 	end.
 	
 broadcast(Client, MR)->
 	Auction = {MR},
 	element(1, Client) ! {subscribe_auction, Auction}.
+	
+broadcastEnd()->
+	ok;
