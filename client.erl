@@ -16,17 +16,25 @@ receiver(Auctions, Interests) ->
 			NewAuctions = [Auction | Auctions],
 			receiver(NewAuctions, Interests);
 		{won_auction, Auction} ->
-			io:format("You Won An Auction~n");
+			io:format("You Won An Auction~n"),
+			NewAuctions = lists:keydelete(Auction, 1, Auctions),
+			receiver(NewAuctions, Interests);
 		{lost_auction, Auction} ->
-			io:format("You Lost An Auction~n")
+			io:format("You Lost An Auction~n"),
+			NewAuctions = lists:keydelete(Auction, 1, Auctions),
+			receiver(NewAuctions, Interests)
 			
 	after 10*1000 ->
-		Index = rand:uniform( length(Auctions) ),
-		%io:format("Bidding on Auction No: ~w~n", [Index]),
-		Auction = lists:nth(Index, Auctions),
-		
-		element(1, Auction) ! {place_bid, {self(), Interests}, rand:uniform( 25 ) },
-		%element(1, Auction) ! {client_remove, self()},
-		receiver(Auctions, Interests)
-		
+		NumAuctions = length(Auctions),
+		if
+			NumAuctions > 0 ->
+				Index = rand:uniform( NumAuctions ),
+				Auction = lists:nth(Index, Auctions),
+				
+				element(1, Auction) ! {place_bid, {self(), Interests}, rand:uniform( 25 ) },
+				%element(1, Auction) ! {client_remove, self()},
+				receiver(Auctions, Interests);
+			true ->
+				receiver(Auctions, Interests)
+		end
 	end.
