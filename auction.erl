@@ -15,6 +15,11 @@ receiver(Clients, Bid, Leader)->
 			broadcast(Client, self()),
 			receiver(NewClients, Bid, Leader);
 		
+		{client_remove, Client} ->
+			io:format("Client Unsubscribed From Auction~n"),
+			NewClients = lists:keydelete(Client, 1, Clients),
+			receiver(NewClients, Bid, Leader);
+		
 		{place_bid, From, Amount}->
 			if 
 				Amount > Bid ->
@@ -45,6 +50,12 @@ broadcastEnd(Clients)->
 	[Client |Tail] = Clients,
 	element(1, Client) ! {lost_auction, self()},
 	broadcastEnd(Tail).
+broadcastEnd([], 0)->
+	exit(normal);
+broadcastEnd(Clients, 0)->
+	[Client |Tail] = Clients,
+	element(1, Client) ! {lost_auction, self()},
+	broadcastEnd(Tail);
 broadcastEnd(Clients, Leader)->
 	element(1, Leader) ! {won_auction, self()},
 	broadcastEnd(Clients).

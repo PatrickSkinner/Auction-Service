@@ -26,6 +26,7 @@ receiver(Auctions, Interests) ->
 		Auction = lists:nth(Index, Auctions),
 		
 		element(1, Auction) ! {place_bid, {self(), Interests}, rand:uniform( 25 ) },
+		%element(1, Auction) ! {client_remove, self()},
 		receiver(Auctions, Interests)
 		
 	end.
