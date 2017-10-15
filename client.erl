@@ -14,7 +14,12 @@ receiver(Auctions, Interests) ->
 			io:format("Subscribed to new auction~n"),
 			
 			NewAuctions = [Auction | Auctions],
-			receiver(NewAuctions, Interests)
+			receiver(NewAuctions, Interests);
+		{won_auction, Auction} ->
+			io:format("You Won An Auction~n");
+		{lost_auction, Auction} ->
+			io:format("You Lost An Auction~n")
+			
 	after 10*1000 ->
 		Index = rand:uniform( length(Auctions) ),
 		%io:format("Bidding on Auction No: ~w~n", [Index]),

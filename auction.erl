@@ -30,13 +30,20 @@ receiver(Clients, Bid, Leader)->
 			
 		{end_auction}->
 			io:format("Auction Ended. Leader: ~w. Bid: ~w~n", [Leader, Bid]),
-			
-			exit(normal)
+			Losers = lists:keydelete(Leader, 1, Clients),
+			broadcastEnd(Losers, Leader)
 	end.
 	
 broadcast(Client, MR)->
 	Auction = {MR},
 	element(1, Client) ! {subscribe_auction, Auction}.
 	
-broadcastEnd()->
-	ok;
+broadcastEnd([])->
+	exit(normal);
+broadcastEnd(Clients)->
+	[Client |Tail] = Clients,
+	element(1, Client) ! {lost_auction, self()},
+	broadcastEnd(Tail).
+broadcastEnd(Clients, Leader)->
+	element(1, Leader) ! {won_auction, self()},
+	broadcastEnd(Clients).
