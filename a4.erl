@@ -30,6 +30,8 @@ receiver(Clients, Auctions) ->
 			
 		{auction_remove, Id} ->
 			NewAuctions = lists:keydelete(Id, 1, Auctions),
+			io:format("Auction Removed~n"),
+			
 			receiver(Clients, NewAuctions)
 			
 	end.
@@ -39,7 +41,6 @@ broadcastClient( Client, []) ->
 	ok;
 broadcastClient( Client, Auctions ) ->
 	[Auction |Tail] = Auctions,
-	%io:format("Iteration of Auctions ~w~n", [element(1, Auction)]),
 	
 	element(1, Auction) ! {client_add, Client},
 	broadcastClient( Client, Tail).

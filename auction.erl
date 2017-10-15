@@ -31,6 +31,7 @@ receiver(Clients, Bid, Leader)->
 		{end_auction}->
 			io:format("Auction Ended. Leader: ~w. Bid: ~w~n", [Leader, Bid]),
 			Losers = lists:keydelete(Leader, 1, Clients),
+			service ! {auction_remove, self()},
 			broadcastEnd(Losers, Leader)
 	end.
 	
