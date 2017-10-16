@@ -1,7 +1,7 @@
--module(a4).
+-module(service).
 -export([a4/0, receiver/2]).
 
-a4() ->
+service() ->
 	MR = spawn(?MODULE, receiver, [ [], [] ] ),
 	register(service, MR).
 	
@@ -10,7 +10,6 @@ receiver(Clients, Auctions) ->
 		{client_add, Id, Interests} ->
 			NewClients = [{Id, Interests} | Clients],
 			io:format("Client Added~n"),
-			%io:format("~w~n", [lists:flatlength(NewClients)]),
 			
 			broadcastClient({Id, Interests}, Auctions),
 			receiver(NewClients, Auctions);
