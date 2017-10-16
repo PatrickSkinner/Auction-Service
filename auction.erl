@@ -1,10 +1,10 @@
 -module(auction).
--export([auction/0, receiver/3]).
+-export([auction/1, receiver/3]).
 
-auction()->
+auction(Topic)->
 	MR = spawn(?MODULE, receiver, [[], 0, 0]),
 	io:format("Auction PID: ~w~n", [MR]),
-	service ! {auction_add, MR, []}.
+	service ! {auction_add, MR, Topic}.
 	
 receiver(Clients, Bid, Leader)->
 	receive

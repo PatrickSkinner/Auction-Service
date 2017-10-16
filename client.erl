@@ -1,8 +1,7 @@
 -module(client).
--export([client/0, receiver/2]).
+-export([client/1, receiver/2]).
 
-client()->
-	Interests = [1, 3],
+client(Interests)->
 	MR = spawn(?MODULE, receiver, [[], Interests]),
 	service ! {client_add, MR, Interests}.
 	%service ! {client_remove, MR}.

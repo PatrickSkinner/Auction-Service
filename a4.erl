@@ -42,13 +42,27 @@ broadcastClient( Client, []) ->
 broadcastClient( Client, Auctions ) ->
 	[Auction |Tail] = Auctions,
 	
-	element(1, Auction) ! {client_add, Client},
-	broadcastClient( Client, Tail).
+	Match = lists:member(element(2, Auction), element(2, Client) ),
+	
+	if
+		Match /= false ->
+			element(1, Auction) ! {client_add, Client},
+			broadcastClient( Client, Tail);
+		true ->
+			broadcastClient( Client, Tail)
+	end.
 	
 broadcastAuction(Auction, [])->
 	ok;
 broadcastAuction(Auction, Clients)->
 	[Client |Tail] = Clients,
+	Match = lists:member(element(2, Auction), element(2, Client) ),
 	
-	element(1, Auction) ! {client_add, Client},
-	broadcastClient( Client, Tail).
+	if
+		Match /= false ->
+			element(1, Auction) ! {client_add, Client},
+			broadcastClient( Client, Tail);
+		true ->
+			broadcastClient( Client, Tail)
+	end.
+	
