@@ -3,8 +3,7 @@
 
 client(Interests)->
 	MR = spawn(?MODULE, receiver, [[], Interests]),
-	service ! {client_add, MR, Interests}.
-	%service ! {client_remove, MR}.
+	global:send(service, {client_add, MR, Interests}).
 
 	
 receiver(Auctions, Interests) ->

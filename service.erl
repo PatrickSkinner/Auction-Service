@@ -3,7 +3,7 @@
 
 service() ->
 	MR = spawn(?MODULE, receiver, [ [], [] ] ),
-	register(service, MR).
+	global:register_name(service, MR).
 	
 receiver(Clients, Auctions) ->
 	receive
