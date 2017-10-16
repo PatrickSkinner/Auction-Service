@@ -1,5 +1,5 @@
 -module(service).
--export([a4/0, receiver/2]).
+-export([service/0, receiver/2]).
 
 service() ->
 	MR = spawn(?MODULE, receiver, [ [], [] ] ),
